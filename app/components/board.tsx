@@ -1,6 +1,24 @@
+import { useState } from "react";
 import Cell from "./cell";
 
 const Board = () => {
+  const [isKnightPlaced, setIsKnightPlaced] = useState(false);
+  const [knightPosition, setKnightPosition] = useState("");
+
+  const placeKnight = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (isKnightPlaced) return knightPosition;
+
+    const target = e.target as HTMLDivElement;
+    let id = target.id;
+
+    if (id.length === 0) {
+      const targetParent = target.parentElement;
+      setKnightPosition(targetParent?.id as string);
+    } else setKnightPosition(target.id);
+
+    setIsKnightPlaced(true);
+  };
+
   const getCells = () => {
     const cells = [];
     const boardLength = 8;
@@ -14,7 +32,7 @@ const Board = () => {
       const row = [];
       for (let j = 0; j < boardLength; j++) {
         const post = `${letters[i]}${nums[j]}`;
-        const cell = Cell(color, post);
+        const cell = Cell(color, post, isKnightPlaced);
         row.push(cell);
         color = color === gray ? lime : gray;
       }
@@ -30,7 +48,7 @@ const Board = () => {
     return cells;
   };
 
-  return <div>{getCells()}</div>;
+  return <div onClick={placeKnight}>{getCells()}</div>;
 };
 
 export default Board;
