@@ -3,9 +3,9 @@ export default function Header() {
     <header>
       <div className="flex p-2 items-end">
         <img
-          src="https://img.freepik.com/free-icon/horse-black-head-shape-chess-piece_318-52446.jpg"
+          src="https://static.wikia.nocookie.net/chess/images/7/7d/DarkKnight.png/"
           alt="knight travails logo"
-          className="w-9 h-9"
+          className="w-12 h-12"
         />
         <h1>Knight travails</h1>
       </div>
