@@ -2,6 +2,8 @@ import { useState } from "react";
 import Cell from "./cell";
 
 const Board = () => {
+  const vertices: string[] = [];
+  const graph: number[][] = [];
   const [isKnightPlaced, setIsKnightPlaced] = useState(false);
   const [knightPosition, setKnightPosition] = useState("");
 
@@ -32,6 +34,7 @@ const Board = () => {
       const row = [];
       for (let j = 0; j < boardLength; j++) {
         const post = `${letters[i]}${nums[j]}`;
+        vertices.push(post);
         const cell = Cell(color, post, isKnightPlaced);
         row.push(cell);
         color = color === gray ? lime : gray;
@@ -45,7 +48,51 @@ const Board = () => {
       );
     }
 
+    graph.push(...createGraph());
+    console.log(graph);
     return cells;
+  };
+
+  const createGraph = () => {
+    const graph = [];
+    const adjencencies = [
+      [-2, 1],
+      [-1, 2],
+      [1, 2],
+      [2, 1],
+      [2, -1],
+      [1, -2],
+      [-1, -2],
+      [-2, -1],
+    ];
+    for (let i = 0; i < vertices.length; i++) {
+      // A - H === 65 - 72
+      // 1 - 8 === 49 - 56
+      const row = [];
+      const letterCode = vertices[i].charCodeAt(0);
+      const numberCode = vertices[i].charCodeAt(1);
+      for (let j = 0; j < adjencencies.length; j++) {
+        const horizontal = adjencencies[j][0] + letterCode;
+        const vertical = adjencencies[j][1] + numberCode;
+        if (
+          horizontal >= 65 &&
+          horizontal <= 72 &&
+          vertical >= 49 &&
+          vertical <= 56
+        ) {
+          row.push(
+            vertices.indexOf(
+              `${String.fromCharCode(horizontal)}${String.fromCharCode(
+                vertical
+              )}`
+            )
+          );
+        }
+      }
+
+      graph.push(row);
+    }
+    return graph;
   };
 
   return <div onClick={placeKnight}>{getCells()}</div>;
