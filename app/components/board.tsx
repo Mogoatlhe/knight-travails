@@ -15,6 +15,7 @@ const Board = () => {
       if (target.classList.contains("hover:bg-sky-600")) {
         target.classList.add("bg-sky-600");
         setEndSquare(id);
+        console.log(id);
       }
       return knightPosition;
     }
@@ -33,7 +34,7 @@ const Board = () => {
     const gray = "bg-gray-200";
     const lime = "bg-lime-800";
     const letters = ["A", "B", "C", "D", "E", "F", "G", "H"];
-    const nums = [1, 2, 3, 4, 5, 6, 7, 8];
+    const nums = [8, 7, 6, 5, 4, 3, 2, 1];
     let color = gray;
 
     for (let i = 0; i < boardLength; i++) {
