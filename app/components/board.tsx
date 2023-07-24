@@ -6,12 +6,18 @@ const Board = () => {
   const graph: number[][] = [];
   const [isKnightPlaced, setIsKnightPlaced] = useState(false);
   const [knightPosition, setKnightPosition] = useState("");
+  const [endSquare, setEndSquare] = useState("");
 
   const placeKnight = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isKnightPlaced) return knightPosition;
-
     const target = e.target as HTMLDivElement;
     let id = target.id;
+    if (isKnightPlaced) {
+      if (target.classList.contains("hover:bg-sky-600")) {
+        target.classList.add("bg-sky-600");
+        setEndSquare(id);
+      }
+      return knightPosition;
+    }
 
     if (id.length === 0) {
       const targetParent = target.parentElement;
@@ -35,7 +41,13 @@ const Board = () => {
       for (let j = 0; j < boardLength; j++) {
         const post = `${letters[i]}${nums[j]}`;
         vertices.push(post);
-        const cell = Cell(color, post, isKnightPlaced);
+        const cell = Cell(
+          color,
+          post,
+          isKnightPlaced,
+          knightPosition,
+          endSquare
+        );
         row.push(cell);
         color = color === gray ? lime : gray;
       }

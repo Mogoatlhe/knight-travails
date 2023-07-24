@@ -1,12 +1,27 @@
-const Cell = (color: String, post: String, isKnightPlaced: boolean) => {
+const Cell = (
+  color: String,
+  post: String,
+  isKnightPlaced: boolean,
+  knightPosition: string,
+  endSquare: string
+) => {
   const knightHover = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isKnightPlaced) return;
+    if (isKnightPlaced) {
+      if (knightPosition === post || endSquare.length > 0) return;
+      const target = e.target as HTMLDivElement;
+      target.classList.add("hover:bg-sky-600");
+      return;
+    }
 
     toggleKnight(e, false);
   };
 
   const knightLeave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (isKnightPlaced) return;
+    if (isKnightPlaced) {
+      const target = e.target as HTMLDivElement;
+      target.classList.remove("hover:bg-sky-600");
+      return;
+    }
 
     toggleKnight(e, true);
   };
