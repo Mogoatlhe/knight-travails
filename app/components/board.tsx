@@ -49,7 +49,6 @@ const Board = () => {
     }
 
     graph.push(...createGraph());
-    console.log(graph);
     return cells;
   };
 
