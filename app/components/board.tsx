@@ -7,6 +7,8 @@ const Board = () => {
   const [isKnightPlaced, setIsKnightPlaced] = useState(false);
   const [knightPosition, setKnightPosition] = useState("");
   const [endSquare, setEndSquare] = useState("");
+  const path: number[] = [];
+  let finalPath: number[];
 
   const placeKnight = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
@@ -15,7 +17,13 @@ const Board = () => {
       if (target.classList.contains("hover:bg-sky-600")) {
         target.classList.add("bg-sky-600");
         setEndSquare(id);
-        console.log(id);
+
+        const start = vertices.indexOf(knightPosition);
+        const end = vertices.indexOf(id);
+
+        if (start === -1 || end === -1) throw new Error("index not found");
+
+        knightMoves(start, end);
       }
       return knightPosition;
     }
@@ -105,6 +113,30 @@ const Board = () => {
       graph.push(row);
     }
     return graph;
+  };
+
+  const knightMoves = (start: number, end: number) => {
+    path.push(start);
+    getShortestPath(start, end);
+  };
+
+  const getShortestPath = (start: number, end: number) => {
+    for (let i = 0; i < graph[start].length; i++) {
+      const curr = graph[start][i];
+
+      if (path.includes(curr)) continue;
+
+      if (finalPath !== undefined && finalPath.length <= path.length) break;
+      if (curr === end) {
+        finalPath = [...path, curr];
+        break;
+      } else {
+        path.push(curr);
+        getShortestPath(curr, end);
+      }
+    }
+
+    path.pop();
   };
 
   return <div onClick={placeKnight}>{getCells()}</div>;
