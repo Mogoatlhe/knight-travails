@@ -22,10 +22,7 @@ const Board = () => {
 
         if (start === -1 || end === -1) throw new Error("index not found");
 
-        graph.createGraph(vertices);
-        const path = graph.knightMoves(start, end);
-        console.log("start: ", start, "end: ", end);
-        console.log(path);
+        displayPath(start, end);
       }
       return knightPosition;
     }
@@ -36,6 +33,19 @@ const Board = () => {
     } else setKnightPosition(target.id);
 
     setIsKnightPlaced(true);
+  };
+
+  const displayPath = (start: number, end: number) => {
+    graph.createGraph(vertices);
+    const path = graph.knightMoves(start, end);
+    path.shift();
+    const cells = document.querySelectorAll(".row");
+    path.forEach((el, i) => {
+      const row = el % 8;
+      const col = Math.floor(el / 8);
+      cells[col].childNodes[row].textContent = `${i + 1}`;
+      console.log(cells[col].children[row].id);
+    });
   };
 
   const getCells = () => {
@@ -65,7 +75,7 @@ const Board = () => {
       color = color === gray ? lime : gray;
 
       cells.push(
-        <div className="flex w-[400px]" key={i}>
+        <div className="flex flex-col flex-wrap row" key={i}>
           {row}
         </div>
       );
@@ -74,7 +84,11 @@ const Board = () => {
     return cells;
   };
 
-  return <div onClick={placeKnight}>{getCells()}</div>;
+  return (
+    <div onClick={placeKnight} className="flex">
+      {getCells()}
+    </div>
+  );
 };
 
 export default Board;
