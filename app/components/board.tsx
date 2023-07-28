@@ -1,14 +1,13 @@
 import { useState } from "react";
 import Cell from "./cell";
+import Graph from "~/models/graph";
 
 const Board = () => {
   const vertices: string[] = [];
-  const graph: number[][] = [];
   const [isKnightPlaced, setIsKnightPlaced] = useState(false);
   const [knightPosition, setKnightPosition] = useState("");
   const [endSquare, setEndSquare] = useState("");
-  const path: number[] = [];
-  let finalPath: number[];
+  const graph = Graph();
 
   const placeKnight = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLDivElement;
@@ -23,7 +22,10 @@ const Board = () => {
 
         if (start === -1 || end === -1) throw new Error("index not found");
 
-        knightMoves(start, end);
+        graph.createGraph(vertices);
+        const path = graph.knightMoves(start, end);
+        console.log("start: ", start, "end: ", end);
+        console.log(path);
       }
       return knightPosition;
     }
@@ -69,74 +71,7 @@ const Board = () => {
       );
     }
 
-    graph.push(...createGraph());
     return cells;
-  };
-
-  const createGraph = () => {
-    const graph = [];
-    const adjencencies = [
-      [-2, 1],
-      [-1, 2],
-      [1, 2],
-      [2, 1],
-      [2, -1],
-      [1, -2],
-      [-1, -2],
-      [-2, -1],
-    ];
-    for (let i = 0; i < vertices.length; i++) {
-      // A - H === 65 - 72
-      // 1 - 8 === 49 - 56
-      const row = [];
-      const letterCode = vertices[i].charCodeAt(0);
-      const numberCode = vertices[i].charCodeAt(1);
-      for (let j = 0; j < adjencencies.length; j++) {
-        const horizontal = adjencencies[j][0] + letterCode;
-        const vertical = adjencencies[j][1] + numberCode;
-        if (
-          horizontal >= 65 &&
-          horizontal <= 72 &&
-          vertical >= 49 &&
-          vertical <= 56
-        ) {
-          row.push(
-            vertices.indexOf(
-              `${String.fromCharCode(horizontal)}${String.fromCharCode(
-                vertical
-              )}`
-            )
-          );
-        }
-      }
-
-      graph.push(row);
-    }
-    return graph;
-  };
-
-  const knightMoves = (start: number, end: number) => {
-    path.push(start);
-    getShortestPath(start, end);
-  };
-
-  const getShortestPath = (start: number, end: number) => {
-    for (let i = 0; i < graph[start].length; i++) {
-      const curr = graph[start][i];
-
-      if (path.includes(curr)) continue;
-
-      if (finalPath !== undefined && finalPath.length <= path.length) break;
-      if (curr === end) {
-        finalPath = [...path, curr];
-        break;
-      } else {
-        path.push(curr);
-        getShortestPath(curr, end);
-      }
-    }
-
-    path.pop();
   };
 
   return <div onClick={placeKnight}>{getCells()}</div>;
